@@ -1,0 +1,94 @@
+from fastapi import FastAPI, Depends, HTTPException
+from sqlalchemy.orm import Session
+from typing import List
+import crud
+import schema
+from schema.schema import UsuarioCreate, UsuarioUpdate, EmpreendimentoCreate, EmpreendimentoUpdate, AreaInteresseCreate, AreaInteresseUpdate
+from model import Base
+from db.db import engine, SessionLocal
+
+Base.metadata.create_all(bind=engine)
+
+app = FastAPI()
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+@app.post("/usuarios/", response_model=schema.Usuario)
+def create_usuario(usuario: schema.UsuarioCreate, db: Session = Depends(get_db)):
+    return crud.create_usuario(db=db, usuario=usuario)
+
+@app.get("/usuarios/{usuario_id}", response_model=schema.Usuario)
+def read_usuario(usuario_id: int, db: Session = Depends(get_db)):
+    db_usuario = crud.get_usuario(db, usuario_id=usuario_id)
+    if db_usuario is None:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+    return db_usuario
+
+@app.get("/usuarios/", response_model=List[schema.Usuario])
+def read_usuarios(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+    usuarios = crud.get_usuarios(db, skip=skip, limit=limit)
+    return usuarios
+
+@app.put("/usuarios/{usuario_id}", response_model=schema.Usuario)
+def update_usuario(usuario_id: int, usuario_update: schema.UsuarioUpdate, db: Session = Depends(get_db)):
+    return crud.update_usuario(db=db, usuario_id=usuario_id, usuario_update=usuario_update)
+
+@app.delete("/usuarios/{usuario_id}")
+def delete_usuario(usuario_id: int, db: Session = Depends(get_db)):
+    return crud.delete_usuario(db=db, usuario_id=usuario_id)
+
+# Rotas de Empreendimentos
+@app.post("/empreendimentos/", response_model=schema.Empreendimento)
+def create_empreendimento(empreendimento: schema.EmpreendimentoCreate, db: Session = Depends(get_db)):
+    return crud.create_empreendimento(db=db, empreendimento=empreendimento)
+
+@app.get("/empreendimentos/{empreendimento_id}", response_model=schema.Empreendimento)
+def read_empreendimento(empreendimento_id: int, db: Session = Depends(get_db)):
+    db_empreendimento = crud.get_empreendimento(db, empreendimento_id=empreendimento_id)
+    if db_empreendimento is None:
+        raise HTTPException(status_code=404, detail="Empreendimento não encontrado")
+    return db_empreendimento
+
+@app.get("/empreendimentos/", response_model=List[schema.Empreendimento])
+def read_empreendimentos(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+    empreendimentos = crud.get_empreendimentos(db, skip=skip, limit=limit)
+    return empreendimentos
+
+@app.put("/empreendimentos/{empreendimento_id}", response_model=schema.Empreendimento)
+def update_empreendimento(empreendimento_id: int, empreendimento_update: schema.EmpreendimentoUpdate, db: Session = Depends(get_db)):
+    return crud.update_empreendimento(db=db, empreendimento_id=empreendimento_id, empreendimento_update=empreendimento_update)
+
+@app.delete("/empreendimentos/{empreendimento_id}")
+def delete_empreendimento(empreendimento_id: int, db: Session = Depends(get_db)):
+    return crud.delete_empreendimento(db=db, empreendimento_id=empreendimento_id)
+
+# Rotas de Áreas de Interesse
+@app.post("/areas-interesse/", response_model=schema.AreaInteresse)
+def create_area_interesse(area_interesse: schema.AreaInteresseCreate, db: Session = Depends(get_db)):
+    return crud.create_area_interesse(db=db, area_interesse=area_interesse)
+
+@app.get("/areas-interesse/{area_interesse_id}", response_model=schema.AreaInteresse)
+def read_area_interesse(area_interesse_id: int, db: Session = Depends(get_db)):
+    db_area_interesse = crud.get_area_interesse(db, area_interesse_id=area_interesse_id)
+    if db_area_interesse is None:
+        raise HTTPException(status_code=404, detail="Área de Interesse não encontrada")
+    return db_area_interesse
+
+@app.get("/areas-interesse/", response_model=List[schema.AreaInteresse])
+def read_areas_interesse(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+    areas_interesse = crud.get_areas_interesse(db, skip=skip, limit=limit)
+    return areas_interesse
+
+@app.put("/areas-interesse/{area_interesse_id}", response_model=schema.AreaInteresse)
+def update_area_interesse(area_interesse_id: int, area_interesse_update: schema.AreaInteresseUpdate, db: Session = Depends(get_db)):
+    return crud.update_area_interesse(db=db, area_interesse_id=area_interesse_id, area_interesse_update=area_interesse_update)
+
+@app.delete("/areas-interesse/{area_interesse_id}")
+def delete_area_interesse(area_interesse_id: int, db: Session = Depends(get_db)):
+    return crud.delete_area_interesse(db=db, area_interesse_id=area_interesse_id)
+
