@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 import crud
-from  schema.schema import Usuario, UsuarioCreate, UsuarioUpdate, Empreendimento, EmpreendimentoCreate, EmpreendimentoUpdate, AreaInteresse, AreaInteresseCreate,AreaInteresseUpdate
+from  schema.schema import ArtigoCreate, ArtigoResponse, Usuario, UsuarioCreate, UsuarioUpdate, Empreendimento, EmpreendimentoCreate, EmpreendimentoUpdate, AreaInteresse, AreaInteresseCreate,AreaInteresseUpdate
 from model.model import Base
 from db.db import engine, SessionLocal
 
@@ -78,4 +78,24 @@ def update_area_interesse(area_interesse_id: int, area_interesse_update: AreaInt
 @app.delete("/areas-interesse/{area_interesse_id}")
 def delete_area_interesse(area_interesse_id: int, db: Session = Depends(get_db)):
     return crud.delete_area_interesse(db=db, area_interesse_id=area_interesse_id)
+@app.post("/artigos/", response_model=ArtigoResponse)
+def create_artigo(artigo: ArtigoCreate, db: Session = Depends(get_db)):
+    return crud.create_artigo(db=db, titulo=artigo.titulo, conteudo=artigo.conteudo, link=artigo.link)
 
+# Endpoint para associar um artigo a uma área de interesse
+@app.post("/artigos/{artigo_id}/areas-interesse/{area_interesse_id}")
+def associate_artigo_area_interesse(artigo_id: int, area_interesse_id: int, db: Session = Depends(get_db)):
+    return crud.associate_artigo_area_interesse(db=db, artigo_id=artigo_id, area_interesse_id=area_interesse_id)
+
+# Endpoint para listar todos os artigos
+@app.get("/artigos/", response_model=List[ArtigoResponse])
+def list_artigos(db: Session = Depends(get_db)):
+    return crud.get_artigos(db=db)
+
+# Endpoint para listar artigos por área de interesse
+@app.get("/areas-interesse/{area_interesse_id}/artigos", response_model=List[ArtigoResponse])
+def list_artigos_por_area_interesse(area_interesse_id: int, db: Session = Depends(get_db)):
+    artigos = crud.get_artigos_por_area_interesse(db=db, area_interesse_id=area_interesse_id)
+    if not artigos:
+        raise HTTPException(status_code=404, detail="Nenhum artigo encontrado para essa área de interesse")
+    return artigos

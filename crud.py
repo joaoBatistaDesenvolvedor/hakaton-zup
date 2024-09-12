@@ -95,3 +95,29 @@ def delete_area_interesse(db: Session, area_interesse_id: int):
     db.delete(db_area_interesse)
     db.commit()
     return {"message": f"Área de Interesse {area_interesse_id} deletada com sucesso"}
+# crud.py
+from sqlalchemy.orm import Session
+from model.model import Artigo, ArtigosAreasInteresse, AreaInteresse
+
+# Função para criar um novo artigo
+def create_artigo(db: Session, titulo: str, conteudo: str, link: str):
+    db_artigo = Artigo(titulo=titulo, conteudo=conteudo, link=link)
+    db.add(db_artigo)
+    db.commit()
+    db.refresh(db_artigo)
+    return db_artigo
+
+# Função para associar um artigo a uma área de interesse
+def associate_artigo_area_interesse(db: Session, artigo_id: int, area_interesse_id: int):
+    db_association = ArtigosAreasInteresse(artigo_id=artigo_id, area_interesse_id=area_interesse_id)
+    db.add(db_association)
+    db.commit()
+    return db_association
+
+# Função para listar todos os artigos
+def get_artigos(db: Session):
+    return db.query(Artigo).all()
+
+# Função para listar artigos por área de interesse
+def get_artigos_por_area_interesse(db: Session, area_interesse_id: int):
+    return db.query(Artigo).join(ArtigosAreasInteresse).filter(ArtigosAreasInteresse.area_interesse_id == area_interesse_id).all()
