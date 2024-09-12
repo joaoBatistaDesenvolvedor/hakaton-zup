@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import  Optional
 
 print("Arquivo schema.py carregado com sucesso")
 # Esquemas de Usuário
@@ -56,3 +56,18 @@ class AreaInteresseUpdate(AreaInteresseBase):
 
 class AreaInteresse(AreaInteresseBase):
     id: int
+
+class ArtigoCreate(BaseModel):
+    titulo: str
+    conteudo: str
+    link: Optional[str] = None
+
+# Schema para retornar um artigo
+class ArtigoResponse(BaseModel):
+    id: int
+    titulo: str
+    conteudo: str
+    link: Optional[str] = None
+
+    class Config:
+        orm_mode = True

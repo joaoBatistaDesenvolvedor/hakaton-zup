@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from model.model import Usuario, Empreendimento, AreaInteresse
+from model.model import Usuario, Empreendimento, AreaInteresse, Artigo, ArtigosAreasInteresse
 from schema.schema import UsuarioCreate, UsuarioUpdate, EmpreendimentoCreate, EmpreendimentoUpdate, AreaInteresseCreate, AreaInteresseUpdate
 from fastapi import HTTPException
 from auth.auth import get_password_hash  # Importar a função para hashear a senha
@@ -62,8 +62,8 @@ def delete_usuario(db: Session, usuario_id: int):
 # Funções de CRUD para Empreendimentos
 def create_empreendimento(db: Session, empreendimento: EmpreendimentoCreate):
     db_empreendimento = Empreendimento(
-        tipo_empreeendimento=empreendimento.tipo_empreeendimento,  # Corrigir o nome do campo
-        descricao_empreeendimento=empreendimento.descricao_empreeendimento,  # Corrigir o nome do campo
+        tipo_empreendimento=empreendimento.tipo_empreendimento,  # Corrigir o nome do campo
+        descricao_empreendimento=empreendimento.descricao_empreendimento,  # Corrigir o nome do campo
         objetivo=empreendimento.objetivo
     )
     db.add(db_empreendimento)
@@ -80,8 +80,8 @@ def update_empreendimento(db: Session, empreendimento_id: int, empreendimento_up
         raise HTTPException(status_code=404, detail="Empreendimento não encontrado")
     
     # Atualizar os campos
-    db_empreendimento.tipo_empreeendimento = empreendimento_update.tipo_empreeendimento
-    db_empreendimento.descricao_empreeendimento = empreendimento_update.descricao_empreeendimento
+    db_empreendimento.tipo_empreendimento = empreendimento_update.tipo_empreendimento
+    db_empreendimento.descricao_empreendimento = empreendimento_update.descricao_empreendimento
     db_empreendimento.objetivo = empreendimento_update.objetivo
     
     db.commit()
@@ -128,3 +128,26 @@ def delete_area_interesse(db: Session, area_interesse_id: int):
     db.delete(db_area_interesse)
     db.commit()
     return {"message": "Área de Interesse deletada com sucesso"}
+
+# Função para criar um novo artigo
+def create_artigo(db: Session, titulo: str, conteudo: str, link: str):
+    db_artigo = Artigo(titulo=titulo, conteudo=conteudo, link=link)
+    db.add(db_artigo)
+    db.commit()
+    db.refresh(db_artigo)
+    return db_artigo
+
+# Função para associar um artigo a uma área de interesse
+def associate_artigo_area_interesse(db: Session, artigo_id: int, area_interesse_id: int):
+    db_association = ArtigosAreasInteresse(artigo_id=artigo_id, area_interesse_id=area_interesse_id)
+    db.add(db_association)
+    db.commit()
+    return db_association
+
+# Função para listar todos os artigos
+def get_artigos(db: Session):
+    return db.query(Artigo).all()
+
+# Função para listar artigos por área de interesse
+def get_artigos_por_area_interesse(db: Session, area_interesse_id: int):
+    return db.query(Artigo).join(ArtigosAreasInteresse).filter(ArtigosAreasInteresse.area_interesse_id == area_interesse_id).all()
