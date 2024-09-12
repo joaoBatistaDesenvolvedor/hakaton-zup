@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import List, Optional
 
+print("Arquivo schema.py carregado com sucesso")
 # Esquemas de Usuário
 class UsuarioBase(BaseModel):
     nome_usuario: str
@@ -18,6 +19,9 @@ class UsuarioUpdate(UsuarioBase):
 
 class Usuario(UsuarioBase):
     id: int
+
+    class Config:
+        from_attributes = True
 
 # Esquemas de Empreendimento
 class EmpreendimentoBase(BaseModel):

@@ -12,6 +12,8 @@ jspm_packages/
 # Diretórios de build
 dist/
 build/
+Lib/
+teste/
 
 # Arquivos de configuração do sistema
 .DS_Store
@@ -40,6 +42,7 @@ Thumbs.db
 # Arquivos de cobertura de testes
 coverage/
 
+
 # Arquivos de saída de compilação
 *.out
 *.class
@@ -51,3 +54,7 @@ coverage/
 *.old
 *.orig
 *.save
+teste/Lib/site-packages/annotated_types-0.7.0.dist-info/INSTALLER
+teste/Lib/site-packages/annotated_types-0.7.0.dist-info/METADATA
+teste/Lib/site-packages/annotated_types-0.7.0.dist-info/RECORD
+teste/Lib/site-packages/annotated_types-0.7.0.dist-info/WHEEL

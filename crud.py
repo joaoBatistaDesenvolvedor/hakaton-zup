@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session  
 import model.model
-from schema.schema import UsuarioCreate, UsuarioUpdate, EmpreendimentoCreate, EmpreendimentoUpdate, AreaInteresseCreate, AreaInteresseUpdate
+from schema.schema import  UsuarioCreate, UsuarioUpdate, EmpreendimentoCreate, EmpreendimentoUpdate, AreaInteresseCreate, AreaInteresseUpdate
 from fastapi import HTTPException
 
 # Funções de CRUD para Usuários
