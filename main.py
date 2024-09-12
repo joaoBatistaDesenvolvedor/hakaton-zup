@@ -28,10 +28,6 @@ def read_usuario(usuario_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Usuário não encontrado")
     return db_usuario
 
-@app.get("/usuarios/", response_model=List[Usuario])
-def read_usuarios(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    usuarios = crud.get_usuarios(db, skip=skip, limit=limit)
-    return usuarios
 
 @app.put("/usuarios/{usuario_id}", response_model=Usuario)
 def update_usuario(usuario_id: int, usuario_update: UsuarioUpdate, db: Session = Depends(get_db)):
@@ -53,10 +49,6 @@ def read_empreendimento(empreendimento_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Empreendimento não encontrado")
     return db_empreendimento
 
-@app.get("/empreendimentos/", response_model=List[Empreendimento])
-def read_empreendimentos(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    empreendimentos = crud.get_empreendimentos(db, skip=skip, limit=limit)
-    return empreendimentos
 
 @app.put("/empreendimentos/{empreendimento_id}", response_model=Empreendimento)
 def update_empreendimento(empreendimento_id: int, empreendimento_update: EmpreendimentoUpdate, db: Session = Depends(get_db)):
@@ -78,10 +70,6 @@ def read_area_interesse(area_interesse_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Área de Interesse não encontrada")
     return db_area_interesse
 
-@app.get("/areas-interesse/", response_model=List[AreaInteresse])
-def read_areas_interesse(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    areas_interesse = crud.get_areas_interesse(db, skip=skip, limit=limit)
-    return areas_interesse
 
 @app.put("/areas-interesse/{area_interesse_id}", response_model=AreaInteresse)
 def update_area_interesse(area_interesse_id: int, area_interesse_update: AreaInteresseUpdate, db: Session = Depends(get_db)):
