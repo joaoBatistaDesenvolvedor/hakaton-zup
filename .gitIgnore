@@ -1,0 +1,30 @@
+# Arquivos e diretórios de ambiente virtual
+venv/
+.env
+*.env
+/treinamento
+# Arquivos de cache do Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Logs e arquivos temporários
+*.log
+*.tmp
+*.lock
+
+# Diretórios de build
+build/
+dist/
+*.egg-info/
+
+# Arquivos de IDEs
+.vscode/
+.idea/
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos de banco de dados SQLite
+*.sqlite3
