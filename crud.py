@@ -127,7 +127,9 @@ def delete_area_interesse(db: Session, area_interesse_id: int):
         raise HTTPException(status_code=404, detail="Área de Interesse não encontrada")
     db.delete(db_area_interesse)
     db.commit()
+
     return {"message": "Área de Interesse deletada com sucesso"}
+
 
 # Função para criar um novo artigo
 def create_artigo(db: Session, titulo: str, conteudo: str, link: str):

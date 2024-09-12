@@ -111,4 +111,6 @@ def associate_artigo_area_interesse(artigo_id: int, area_interesse_id: int, db: 
 # Endpoint para listar todos os artigos
 @app.get("/artigos/", response_model=List[ArtigoResponse])
 def list_artigos(db: Session = Depends(get_db)):
+
     return crud.get_artigos(db=db)
+
