@@ -25,8 +25,8 @@ class Usuario(UsuarioBase):
 
 # Esquemas de Empreendimento
 class EmpreendimentoBase(BaseModel):
-    tipo_empreeendimento: str
-    descricao_empreeendimento: str
+    tipo_empreendimento: str  # Corrigir o nome do campo
+    descricao_empreendimento: str  # Corrigir o nome do campo
     objetivo: str
 
     class Config:

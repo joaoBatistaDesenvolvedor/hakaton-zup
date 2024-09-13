@@ -52,6 +52,10 @@ def update_usuario(db: Session, usuario_id: int, usuario_update: UsuarioUpdate):
     return db_usuario
 
 def delete_usuario(db: Session, usuario_id: int):
+    # Remover todos os empreendimentos associados ao usuário
+    db.query(Empreendimento).filter(Empreendimento.usuario_id == usuario_id).delete()
+    
+    # Agora, deletar o usuário
     db_usuario = db.query(Usuario).filter(Usuario.id == usuario_id).first()
     if db_usuario is None:
         raise HTTPException(status_code=404, detail="Usuário não encontrado")

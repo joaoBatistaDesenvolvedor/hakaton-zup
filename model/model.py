@@ -16,8 +16,8 @@ class Empreendimento(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     usuario_id = Column(Integer, ForeignKey("usuarios.id"))
-    tipo_empreeendimento = Column(String(50))
-    descricao_empreeendimento = Column(Text)
+    tipo_empreendimento = Column(String(50))  # Corrigido
+    descricao_empreendimento = Column(Text)  # Corrigido
     objetivo = Column(Text)
     
     usuario = relationship("Usuario")
