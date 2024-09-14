@@ -2,16 +2,27 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 import crud
-from schema.schema import  ArtigoCreate, ArtigoResponse, Usuario, UsuarioCreate, UsuarioUpdate, Empreendimento, EmpreendimentoCreate, EmpreendimentoUpdate, AreaInteresse, AreaInteresseCreate, AreaInteresseUpdate
+from schema.schema import ArtigoCreate, ArtigoResponse, Usuario, UsuarioCreate, UsuarioUpdate, Empreendimento, EmpreendimentoCreate, EmpreendimentoUpdate, AreaInteresse, AreaInteresseCreate, AreaInteresseUpdate
 from model.model import Base
 from db.db import engine, SessionLocal
 from auth.auth import authenticate_user, create_access_token, get_current_user  # Importar funções de autenticação
 from fastapi.security import OAuth2PasswordRequestForm
 from datetime import timedelta
+from fastapi.middleware.cors import CORSMiddleware
+
+# Definir o app primeiro
+app = FastAPI()
+
+# Adicionar o middleware CORS após definir o app
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Permitir todas as origens (ou especifique o domínio do frontend)
+    allow_credentials=True,
+    allow_methods=["*"],  # Permitir todos os métodos (GET, POST, etc.)
+    allow_headers=["*"],  # Permitir todos os cabeçalhos
+)
 
 Base.metadata.create_all(bind=engine)
-
-app = FastAPI()
 
 def get_db():
     db = SessionLocal()
@@ -34,10 +45,12 @@ def login_for_access_token(db: Session = Depends(get_db), form_data: OAuth2Passw
     access_token = create_access_token(data={"sub": user.nome_usuario}, expires_delta=access_token_expires)
     return {"access_token": access_token, "token_type": "bearer"}
 
-# Exemplo de rota protegida
-@app.get("/usuarios/me", response_model=Usuario)
-def read_users_me(current_user: Usuario = Depends(get_current_user)):
-    return current_user
+@app.get("/usuarios/{usuario_id}/areas-interesse", response_model=List[AreaInteresse])
+def get_areas_interesse_usuario(usuario_id: int, db: Session = Depends(get_db)):
+    areas_interesse = crud.get_areas_interesse_usuario(db=db, usuario_id=usuario_id)
+    if not areas_interesse:
+        raise HTTPException(status_code=404, detail="Áreas de Interesse não encontradas para este usuário")
+    return areas_interesse
 
 # Rotas de Usuários
 @app.post("/usuarios/", response_model=Usuario)
@@ -111,6 +124,4 @@ def associate_artigo_area_interesse(artigo_id: int, area_interesse_id: int, db: 
 # Endpoint para listar todos os artigos
 @app.get("/artigos/", response_model=List[ArtigoResponse])
 def list_artigos(db: Session = Depends(get_db)):
-
     return crud.get_artigos(db=db)
-

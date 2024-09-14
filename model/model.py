@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey
+from sqlalchemy import ARRAY, Column, Integer, String, Text, ForeignKey
 from sqlalchemy.orm import relationship
 from db.db import Base
 
@@ -10,6 +10,8 @@ class Usuario(Base):
     senha = Column(Text)
     nome_completo = Column(String(100))
     email = Column(String(100), unique=True, index=True)
+
+    areas_interesse = Column(ARRAY(Integer))
 
 class Empreendimento(Base):
     __tablename__ = "empreendimentos"

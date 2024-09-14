@@ -1,7 +1,8 @@
 from pydantic import BaseModel
-from typing import  Optional
+from typing import List, Optional
 
 print("Arquivo schema.py carregado com sucesso")
+
 # Esquemas de Usuário
 class UsuarioBase(BaseModel):
     nome_usuario: str
@@ -13,9 +14,11 @@ class UsuarioBase(BaseModel):
 
 class UsuarioCreate(UsuarioBase):
     senha: str
+    areas_interesse: List[str]  # Agora aceita uma lista de nomes de áreas de interesse
 
 class UsuarioUpdate(UsuarioBase):
     senha: Optional[str] = None  # Senha opcional para atualização
+    areas_interesse: List[str]
 
 class Usuario(UsuarioBase):
     id: int
